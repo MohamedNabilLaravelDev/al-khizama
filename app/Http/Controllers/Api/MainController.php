@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\General\dateIntervalsRequest;
 use App\Http\Resources\Api\CurrencyResource;
 use App\Http\Resources\Api\OfferResource;
-use App\Http\Resources\Api\Settings\ImageResource;
+use App\Http\Resources\Api\Settings\IntroResource;
 use App\Http\Resources\Api\TransactionTipCollection;
 use App\Models\Currency;
 use App\Models\Day;
-use App\Models\Image;
+use App\Models\IntroSlider;
 use App\Models\Offer;
 use App\Traits\ResponseTrait;
 use DateTime;
@@ -29,11 +29,11 @@ class MainController extends Controller {
 
   /********************* // home //************************** */
   public function home() {
-    $sliders              = Image::active()->take(3)->get();
+    $sliders              = IntroSlider::take(3)->get();
     $transferTransactions = auth('sanctum')->user()->transferTransactions()->paginate(5);
 
     $data = [
-      'sliders'              => ImageResource::collection($sliders),
+      'sliders'              => IntroResource::collection($sliders),
       'transferTransactions' => new TransactionTipCollection($transferTransactions),
     ];
     return $this->successData($data);
