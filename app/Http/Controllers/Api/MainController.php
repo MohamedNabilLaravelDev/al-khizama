@@ -30,7 +30,7 @@ class MainController extends Controller {
   /********************* // home //************************** */
   public function home() {
     $sliders              = IntroSlider::take(3)->get();
-    $transferTransactions = auth('sanctum')->user()->transferTransactions()->paginate(5);
+    $transferTransactions = auth('sanctum')->user()->transferTransactions()->latest()->paginate(5);
 
     $data = [
       'sliders'              => IntroResource::collection($sliders),
