@@ -14,12 +14,13 @@ class transferTransactionTipResource extends JsonResource {
       'serial'                => $this->serial,
 
       'total_paid_amount'     => $this->total_paid_amount,
-      'currency_code'         => $this->receivedCurrencyType->code,
-      'currency_country_name' => $this->receivedCurrencyType->country_name,
-      'currency_country_flag' => $this->receivedCurrencyType->country_flag,
 
-      'sender_name'           => $this->transferTransaction->sender_name,
-      'receiver_name'         => $this->transferTransaction->receiver_name,
+      'currency_code'         => $this->totalPaidCurrencyType->code,
+      'currency_country_name' => $this->totalPaidCurrencyType->country_name,
+      'currency_country_flag' => $this->totalPaidCurrencyType->country_flag,
+
+      'sender_name'           => $this->sender_name,
+      'receiver_name'         => $this->receiver_name,
 
       'payment_date'          => \Carbon\Carbon::parse($this->created_at)->translatedFormat('l jS F'),
     ];

@@ -69,16 +69,22 @@ class TransferTransactionController extends Controller {
       $transferTransaction = transferTransaction::create($fixedData);
 
       foreach ($request->sent_amount as $key => $sentAmount) {
+
+        $receivedCurrency = Currency::find($request['received_currency_type_id'][$key]);
+        $received_amount  = $sentAmount * $receivedCurrency->buying_price;
+
         transferAmount::create([
           'transfer_transaction_id'     => $transferTransaction->id,
           'sender_id'                   => $request->sender_id,
           'sent_amount'                 => $request->sent_amount[$key],
           'sent_currency_type_id'       => $request->sent_currency_type_id,
-          'received_amount'             => $request->received_amount[$key],
+          'received_amount'             => $received_amount,
           'received_currency_type_id'   => $request->received_currency_type_id[$key],
           'total_paid_amount'           => $request->sent_amount[$key],
           'total_paid_currency_type_id' => $request->sent_currency_type_id,
           'status'                      => $request->status,
+          'selling_price'               => $receivedCurrency->buying_price,
+          'buying_price'                => $receivedCurrency->buying_price,
         ]);
       }
 
@@ -126,7 +132,7 @@ class TransferTransactionController extends Controller {
   }
 
   public function myTransactions() {
-    $transferTransaction = auth('sanctum')->user()->transferAmounts;
+    $transferTransaction = auth('sanctum')->user()->transferTransactions;
     $data                = transferTransactionTipResource::collection($transferTransaction);
 
     return $this->successData($data);

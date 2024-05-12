@@ -21,7 +21,7 @@ class dateIntervalsRequest extends BaseApiRequest {
    */
   public function rules() {
     return [
-      'date' => 'required',
+      'date' => 'required|date|after_or_equal:' . date('Y-m-d'),
     ];
   }
 }

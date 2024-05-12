@@ -7,6 +7,7 @@ use App\Http\Requests\Api\General\dateIntervalsRequest;
 use App\Http\Resources\Api\CurrencyResource;
 use App\Http\Resources\Api\OfferResource;
 use App\Http\Resources\Api\Settings\ImageResource;
+use App\Http\Resources\Api\TransactionTipCollection;
 use App\Models\Currency;
 use App\Models\Day;
 use App\Models\Image;
@@ -29,18 +30,18 @@ class MainController extends Controller {
   /********************* // home //************************** */
   public function home() {
     $sliders              = Image::active()->take(3)->get();
-    $transferTransactions = auth('sanctum')->user()->transferTransactions()->whereStatus('done')->paginate(5);
+    $transferTransactions = auth('sanctum')->user()->transferTransactions()->paginate(5);
 
     $data = [
       'sliders'              => ImageResource::collection($sliders),
-      'transferTransactions' => transferTransactionResource::collection($transferTransactions),
+      'transferTransactions' => new TransactionTipCollection($transferTransactions),
     ];
     return $this->successData($data);
   }
 
   /********************* // currencies //************************** */
   public function currencies() {
-    $currencies = Currency::allAvailable();
+    $currencies = Currency::whereIsAvailable(1)->whereIsDefault(0)->get();
 
     $data = CurrencyResource::collection($currencies);
     return $this->successData($data);
@@ -83,6 +84,7 @@ class MainController extends Controller {
     $date      = new DateTime($request->date);
     $day       = Day::where('name->en', $date->format('l'))->first();
     $intervals = $day->dayIntervals;
+    $times     = [];
     foreach ($intervals as $key => $time) {
       $times[] = [
         'from' => $time->from,

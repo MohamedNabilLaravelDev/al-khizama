@@ -22,6 +22,9 @@ return new class extends Migration {
       $table->decimal('received_amount');
       $table->decimal('total_paid_amount');
 
+      $table->decimal('selling_price');
+      $table->decimal('buying_price');
+
       $table->decimal('app_fees')->default(0);
       $table->decimal('added_value')->default(0);
 
